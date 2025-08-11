@@ -9,7 +9,7 @@ use pyo3::prelude::*;
 // }
 
 // name , id , favorite food , expired date
-pub use common::CardItems;
+pub use common::CardRow;
 
 
 #[pyclass]
@@ -40,36 +40,59 @@ impl Cards{
 						
 	}
 
+	// clears items and returns the cardtable to user
+	fn empty_and_clone(&mut self)-> common::CardTable{
+		let cln = (self.name.clone(), self.id.clone(), self.favorite_food.clone(), self.expire_date.clone());
+		*self = Self::empty();
+		cln
+	}
+
+
+	fn convert_read(&mut self, list: Vec<common::Card>)->common::CardTable{
+			for i in list.into_iter(){
+				println!("{}",i.name);	
+				self.name.push(i.name);
+			
+				self.id.push(i.id);
+				self.favorite_food.push(i.favorite_food);
+				self.expire_date.push(i.expire_date);
+				}
+			self.empty_and_clone()
+		}
+
+		
+
 }
 
 #[pymethods]
 impl Cards{
 	#[new]	
-	pub fn new(list: Vec<CardItems> )->Self
+	pub fn write(list: Vec<CardRow>)->Self
 		{
 		duckduck::store(list);
 		Self::empty()
 	}
 
-
-	
 	pub fn read(&mut self)->common::CardTable{
 		
-		let list = duckduck::read();
-		for i in list.into_iter(){
-			println!("{}",i.name);	
-			self.name.push(i.name);
 		
-			self.id.push(i.id);
-			self.favorite_food.push(i.favorite_food);
-			self.expire_date.push(i.expire_date);
-			}
-		
-		(self.name.clone(),self.id.clone(),self.favorite_food.clone(),self.expire_date.clone())
+		self.convert_read(
+			duckduck::read_all()
+			)
 	}
-
-
-
+	
+	pub fn get(&mut self, id: usize)->common::CardTable{
+		
+		self.convert_read(duckduck::get(id))
+	}
+	
+	pub fn update(&self, id: usize, replacing: [String;2])->bool{
+		duckduck::update(id, replacing).unwrap()
+	}
+	pub fn delete(&self, id: usize)->bool{
+		duckduck::delete(id).unwrap()
+	}
+	
 
 }
 
