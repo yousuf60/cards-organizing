@@ -12,7 +12,7 @@ fn connect()->Connection{
 fn create()->Result<()>{
 
 	connect().execute_batch(r"
-		CREATE IF NOT EXISTS TABLE cards(
+		CREATE OR REPLACE TABLE cards(
 			Name varchar,
 			Id integer UNIQUE,
 			FavoriteFood varchar,
@@ -34,10 +34,10 @@ pub fn insert(dt: common::CardRow)->Result<()>{
 
 
 pub fn store(list: Vec<common::CardRow>){
-	let _ = create();
+	create().unwrap();
 	for i in list.into_iter(){
 		println!("{:#?}",i);
-		insert(i);
+		if let Err(e)=insert(i){println!("{:#?}",e);};
 		}
 }
 

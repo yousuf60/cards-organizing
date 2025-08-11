@@ -7,8 +7,9 @@ converting_data = [
 
 # name , id , preferred food , expired date
 obj = organizer.Cards(converting_data)
-
-
+print(obj)
+print(obj.__dir__())
+print(obj.read())
 
 returned_read = [[],[], [], []]
 # only converting rows to columns
