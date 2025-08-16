@@ -24,7 +24,7 @@ class Rows(BaseModel):
 class Columns(str, Enum):
     name = "name"
     favoritefood = "favoriteFood"
-    date = "date"
+    expiredate = "expiredate"
     
 
 @app.get("/")
