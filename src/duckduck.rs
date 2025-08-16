@@ -11,7 +11,7 @@ fn connect()->Connection{
 	Connection::open(DATAPATH).unwrap()
 }
 
-fn create()->Result<()>{
+pub fn create()->Result<()>{
 
 	connect().execute_batch(r"
 		CREATE OR REPLACE TABLE cards(
@@ -25,22 +25,27 @@ fn create()->Result<()>{
 }
 
 
-pub fn insert(dt: CardRow)->Result<()>{
-	connect().execute(
+pub fn insert(dt: CardRow)->bool{
+	if let Err(e)=connect().execute(
 			"INSERT INTO cards VALUES (?,?,?,?)",
-			params![dt[0], dt[1], dt[2], dt[3]]	//[dt.name, dt.id, dt.favorite_food, dt.expire_date]	
-	)?;
+			params![dt[0], dt[1], dt[2], dt[3]]	
+		){
+			println!("{:#?}",e);
+			return false;
+		}
+	;
 
-	Ok(())
+	true
 }
 
 
-pub fn store(list: Vec<CardRow>){
-	create().unwrap();
+pub fn store(list: Vec<CardRow>)->Vec<bool>{
+	let mut results  = vec![];
 	for i in list.into_iter(){
-		println!("{:#?}",i);
-		if let Err(e)=insert(i){println!("{:#?}",e);};
-		}
+		results.push(insert(i));
+		};
+		
+	results
 }
 
 	

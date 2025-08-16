@@ -64,6 +64,7 @@ impl Cards{
 	#[new]	
 	pub fn new(list: Vec<CardRow>)->Self
 		{
+		duckduck::create().unwrap();
 		duckduck::store(list);
 		Self::empty()
 	}
@@ -88,6 +89,10 @@ impl Cards{
 	pub fn delete(&self, id: String)->bool{
 		duckduck::delete(id).unwrap()
 	}
+	pub fn insert(&self, dt: Vec<CardRow>)->Vec<bool>{
+		duckduck::store(dt)
+	}
+	
 	
 
 }
