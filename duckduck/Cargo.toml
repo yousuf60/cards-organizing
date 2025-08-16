@@ -1,8 +1,0 @@
-[package]
-name = "duckduck"
-version = "0.1.3"
-edition = "2024"
-
-[dependencies]
-common = {path="../common"}
-duckdb = { version = "1.3.2", features = ["bundled"] }

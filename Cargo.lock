@@ -369,10 +369,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "common"
-version = "0.1.3"
-
-[[package]]
 name = "const-random"
 version = "0.1.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -429,14 +425,6 @@ dependencies = [
  "rust_decimal",
  "smallvec",
  "strum",
-]
-
-[[package]]
-name = "duckduck"
-version = "0.1.3"
-dependencies = [
- "common",
- "duckdb",
 ]
 
 [[package]]
@@ -854,10 +842,9 @@ checksum = "42f5e15c9953c5e4ccceeb2e7382a716482c34515315f7b03532b8b4e8393d2d"
 
 [[package]]
 name = "organizer"
-version = "0.1.5"
+version = "0.1.503"
 dependencies = [
- "common",
- "duckduck",
+ "duckdb",
  "pyo3",
 ]
 
@@ -1346,9 +1333,9 @@ checksum = "7264e107f553ccae879d21fbea1d6724ac785e8c3bfc762137959b5802826ef3"
 
 [[package]]
 name = "uuid"
-version = "1.17.0"
+version = "1.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3cf4199d1e5d15ddd86a694e4d0dffa9c323ce759fea589f00fef9d81cc1931d"
+checksum = "f33196643e165781c20a5ead5582283a7dacbb87855d867fbc2df3f81eddc1be"
 dependencies = [
  "js-sys",
  "wasm-bindgen",

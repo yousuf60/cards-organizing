@@ -1,4 +1,9 @@
 import organizer 
+from fastapi import FastAPI
+
+app = FastAPI()
+
+
 def main():
     pass
 

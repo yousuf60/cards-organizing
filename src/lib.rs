@@ -1,5 +1,7 @@
 use pyo3::prelude::*;
 mod data;
+mod duckduck;
+mod common;
 pub use data::Cards;
 
 

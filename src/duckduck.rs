@@ -2,7 +2,9 @@
 use duckdb::{params, Params, Result, Connection};
 const DATAPATH: &str = "./data/data.dt";
 
-pub use common::Card;
+pub use crate::common::Card;
+pub use crate::common::CardRow;
+
 
 
 fn connect()->Connection{
@@ -23,17 +25,17 @@ fn create()->Result<()>{
 }
 
 
-pub fn insert(dt: common::CardRow)->Result<()>{
+pub fn insert(dt: CardRow)->Result<()>{
 	connect().execute(
 			"INSERT INTO cards VALUES (?,?,?,?)",
-			params![dt.0, dt.1, dt.2, dt.3]	//[dt.name, dt.id, dt.favorite_food, dt.expire_date]	
+			params![dt[0], dt[1], dt[2], dt[3]]	//[dt.name, dt.id, dt.favorite_food, dt.expire_date]	
 	)?;
 
 	Ok(())
 }
 
 
-pub fn store(list: Vec<common::CardRow>){
+pub fn store(list: Vec<CardRow>){
 	create().unwrap();
 	for i in list.into_iter(){
 		println!("{:#?}",i);
@@ -66,7 +68,7 @@ fn query_map(command: String ,params_:impl Params)->Vec<Card>{
 		
 }
 
-pub fn get(id: usize)->Vec<Card>{
+pub fn get(id: String)->Vec<Card>{
 	let command =
 		r"
 			SELECT * FROM cards
@@ -79,27 +81,26 @@ pub fn get(id: usize)->Vec<Card>{
 
 
 pub fn read_all()->Vec<Card>{
+	println!("readallllllll");
 	let command = "SELECT name , id , favoritefood , expiredate FROM cards".to_string();
 	query_map(command, params![])
 			 
 	
 }
 
-pub fn update(id: usize, replacing: [String;2])->Result<bool>{
+pub fn update(id: String, replacing: [String;2])->Result<bool>{
+	println!("{} updating. ..",replacing[0]);
+	
 	connect().execute(
-				r"UPDATE  cards
-					set ? = ? WHERE id = ?
-				",
-				params![replacing[0], replacing[1], id.to_string()]
+				&format!("UPDATE cards SET {}=? WHERE id=?",replacing[0]),
+				params![replacing[1], id.to_string()]
 		)?;
 		Ok(true)
 		
 }
-pub fn delete(id: usize)->Result<bool>{
+pub fn delete(id: String)->Result<bool>{
 	connect().execute(
-					r"DELETE FROM cards
-						WHERE id = ?
-					",
+					r"DELETE FROM cards WHERE id = ?",
 					params![id.to_string()]
 			)?;
 			Ok(true)

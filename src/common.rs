@@ -1,5 +1,5 @@
-pub type CardRow = (String, usize, String, String);
-pub type CardTable = (Vec<String>, Vec<usize>, Vec<String>, Vec<String>);
+pub type CardRow = [String;4];
+pub type CardTable = [Vec<String>;4];
 
 #[derive(Debug)]
 pub struct Card{

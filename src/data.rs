@@ -1,15 +1,12 @@
 use pyo3::prelude::*;
 
-//use pyo3::types::PyDate;
-
-// 
-// #[pyclass]
-// struct CardsHolder{
-	// cards: Cards
-// }
-
 // name , id , favorite food , expired date
-pub use common::CardRow;
+
+pub use crate::common::Card;
+pub use crate::common::CardRow;
+pub use crate::common::CardTable;
+use  crate::duckduck;
+
 
 
 #[pyclass]
@@ -20,7 +17,7 @@ pub struct Cards{
 	pub name: Vec<String>,
 
 	
-	pub id: Vec<usize>,
+	pub id: Vec<String>,
 	
 	pub favorite_food: Vec<String>,
 
@@ -41,19 +38,17 @@ impl Cards{
 	}
 
 	// clears items and returns the cardtable to user
-	fn empty_and_clone(&mut self)-> common::CardTable{
-		let cln = (self.name.clone(), self.id.clone(), self.favorite_food.clone(), self.expire_date.clone());
+	fn empty_and_clone(&mut self)-> CardTable{
+		let cln = [self.name.clone(), self.id.clone(), self.favorite_food.clone(), self.expire_date.clone()];
 		*self = Self::empty();
 		cln
 	}
 
 
-	fn convert_read(&mut self, list: Vec<common::Card>)->common::CardTable{
+	fn convert_read(&mut self, list: Vec<Card>)->CardTable{
 			for i in list.into_iter(){
-				println!("{}",i.name);	
-				self.name.push(i.name);
-			
-				self.id.push(i.id);
+				self.name.push(i.name);			
+				self.id.push(i.id.to_string());
 				self.favorite_food.push(i.favorite_food);
 				self.expire_date.push(i.expire_date);
 				}
@@ -67,13 +62,13 @@ impl Cards{
 #[pymethods]
 impl Cards{
 	#[new]	
-	pub fn write(list: Vec<CardRow>)->Self
+	pub fn new(list: Vec<CardRow>)->Self
 		{
 		duckduck::store(list);
 		Self::empty()
 	}
 
-	pub fn read(&mut self)->common::CardTable{
+	pub fn read(&mut self)->CardTable{
 		
 		
 		self.convert_read(
@@ -81,15 +76,16 @@ impl Cards{
 			)
 	}
 	
-	pub fn get(&mut self, id: usize)->common::CardTable{
+	pub fn get(&mut self, id: String)->CardTable{
 		
 		self.convert_read(duckduck::get(id))
 	}
 	
-	pub fn update(&self, id: usize, replacing: [String;2])->bool{
+	pub fn update(&self, id: String, replacing: [String;2])->bool{
+		println!("got {}",replacing[0]);
 		duckduck::update(id, replacing).unwrap()
 	}
-	pub fn delete(&self, id: usize)->bool{
+	pub fn delete(&self, id: String)->bool{
 		duckduck::delete(id).unwrap()
 	}
 	
